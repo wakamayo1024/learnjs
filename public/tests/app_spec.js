@@ -51,15 +51,38 @@ describe('LearnJS', function() {
             expect(view.find('[data-name="code"]').text()).toEqual('function problem() {return __; }');
         });
         describe('answer section', function() {
-            it('can check a correct answer by hitting a button', function() {
-                view.find('.answer').val('true');
-                view.find('.check-btn').click();
-                expect(view.find('.result').text()).toEqual('Correct!');
-            });
+            var resultFlash;
+
+            beforeEach(function() {
+                spyOn(learnjs,'flashElement');
+                resultFlash = view.find('.result');
+            })
+            // 3500
+            describe('when the answer is correct', function() {
+                beforeEach(function() {
+                    view.find('.answer').val('true');
+                    view.find('.check-btn').click();
+                });
+                it('flash the result', function() {
+                    var flashArgs = learnjs.flashElement.calls.argsFor(0);
+                    expect(flashArgs[0]).toEqual(resultFlash);
+                    expect(flashArgs[1].find('span').text()).toEqual('Correct!')
+                });
+                it('shows a link to the next problem', function() {
+                    var link = learnjs.flashElement.calls.argsFor(0)[1].find('a');
+                    expect(link.text()).toEqual(resultFlash);
+                    expect(link.attr('href')).toEqual('#problem-2')
+                });
+            })
             it('rejects an incorrect answer', function() {
                 view.find('.answer').val('false');
                 view.find('.check-btn').click();
                 expect(view.find('.result').text()).toEqual('Incorrect!');
+            });
+            it('check a next page',function (){
+                view.find('.answer').val('true');
+                view.find('.check-btn').click();
+                expect(view.find('.correct-flash .a').text()).toEqual('Next Problem');
             });
         });
     });

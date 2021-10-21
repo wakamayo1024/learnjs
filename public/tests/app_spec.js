@@ -13,15 +13,9 @@ describe('LearnJS', function() {
         expect(learnjs.problemView).toHaveBeenCalledWith('42');
     });
     it('invokes the router when loaded', function(){
-        spyOn(learnjs, 'showView');
+        spyOn(learnjs, 'showView');     // showViewの呼び出しを監視
         learnjs.appOnReady();
-        expect(learnjs.showView).toHaveBeenCalledWith(window.location.hash);
-    });
-    
-    it('invokes the router when loaded', function(){
-        spyOn(learnjs, 'showView');
-        learnjs.appOnReady();
-        expect(learnjs.showView).toHaveBeenCalledWith(window.location.hash);
+        expect(learnjs.showView).toHaveBeenCalledWith(window.location.hash);    // ハッシュと一緒に呼び出されていることを確認
     });
 
     it('subscribes to the hash change event', function(){
@@ -29,6 +23,12 @@ describe('LearnJS', function() {
         spyOn(learnjs, 'showView');
         $(window).trigger('hashchange');
         expect(learnjs.showView).toHaveBeenCalledWith(window.location.hash);
+    });
+    it('can redirect to the main view after the last problem in anserd', function(){
+        var view = learnjs.problemView(formattedProblem.length);
+        view.find('.answer').val('true');
+        view.find('.check-btn').click();
+        expect(view.find('.correct-flash .a').text()).toEqual('Next Problem');
     });
 
     describe('problem view', function(){

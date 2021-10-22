@@ -41,7 +41,10 @@ learnjs.problemView = function(data) {
     learnjs.applyObject(problemData, view);
     return view;
 }
-
+// 3800
+learnjs.landingView = function() {
+    return learnjs.template('landing-view');
+}
 // 3700
 learnjs.buildCorrectFlash = function(problemNum) {
     var correctFlash = learnjs.template('correct-flash');
@@ -57,7 +60,8 @@ learnjs.buildCorrectFlash = function(problemNum) {
 
 learnjs.showView = function(hash) {
     var routes = {
-        '#problem': learnjs.problemView
+        '#problem': learnjs.problemView,
+        '': learnjs.landingView
     };
     var hashParts = hash.split('-');
     var viewFn = routes[hashParts[0]];

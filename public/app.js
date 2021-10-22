@@ -22,6 +22,8 @@ learnjs.showView = function(hash) {
     var viewFn = routes[hashParts[0]];
     if (viewFn) {
         $('.view-container').empty().append(viewFn(hashParts[1]));
+        learnjs.triggerEvent('removingView', []);
+        $('.view-container').empty().append(viewFn(hashParts[1]))
     }
 }
 
@@ -89,4 +91,9 @@ learnjs.flashElement = function(elem, content) {
         elem.html(content);
         elem.fadeIn();
     });
+}
+
+// 3912
+learnjs.triggerEvent = function(name, arg) {
+    $('.view-container>*').trigger(name, arg);
 }

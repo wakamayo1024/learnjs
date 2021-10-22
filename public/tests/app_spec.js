@@ -12,6 +12,12 @@ describe('LearnJS', function() {
         learnjs.showView('#problem-42');
         expect(learnjs.problemView).toHaveBeenCalledWith('42');
     });
+    // 3911
+    it('triggers removing View event when removing the view', function() {
+        spyOn(learnjs, 'triggerEvent');
+        learnjs.showView('#problem-1');
+        expect(learnjs.triggerEvent).toHaveBeenCalledWith('removingView', []);
+    })
     it('invokes the router when loaded', function(){
         spyOn(learnjs, 'showView');     // showViewの呼び出しを監視
         learnjs.appOnReady();

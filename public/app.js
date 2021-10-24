@@ -24,6 +24,7 @@ learnjs.awsRefresh = function() {
             deferred.resolve(AWS.config.credentials.identityId)
         }
     });
+    return deferred;
 }
 
 function googleSignIn(googleUser){
@@ -43,16 +44,17 @@ function googleSignIn(googleUser){
             email: googleUser.getBasicProfile().getEmail()
         });
     });
-    // function refresh() {
-    //     return gapi.auth2.getAuthInstance().signIn({
-    //         prompt: 'login'
-    //     }).then(function(userUpdate) {
-    //         var creds = AWS.config.credentials;
-    //         var newToken = userUpdate.getAuthResponse().id_token;
-    //         creds.params.Logins['accounts.google.com'] = newToken;
-    //         return learnjs.awsRefresh();    
-    //     })
-    // }
+    // 4200
+    function refresh() {
+        return gapi.auth2.getAuthInstance().signIn({
+            prompt: 'login'
+        }).then(function(userUpdate) {
+            var creds = AWS.config.credentials;
+            var newToken = userUpdate.getAuthResponse().id_token;
+            creds.params.Logins['accounts.google.com'] = newToken;
+            return learnjs.awsRefresh();    
+        })
+    }
 }
 
 learnjs.showView = function(hash) {

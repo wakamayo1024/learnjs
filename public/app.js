@@ -12,6 +12,10 @@ learnjs.problems = [
     }
 ];
 
+function googleSignIn(){
+    console.log(arguments);
+}
+
 learnjs.showView = function(hash) {
     var routes = {
         '#problem': learnjs.problemView,

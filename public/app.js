@@ -14,6 +14,9 @@ learnjs.problems = [
     }
 ];
 
+// 4200
+learnjs.identity = new $.Deferred();
+
 // 4103
 learnjs.awsRefresh = function() {
     var deferred = new $.Deferred();
@@ -24,7 +27,8 @@ learnjs.awsRefresh = function() {
             deferred.resolve(AWS.config.credentials.identityId)
         }
     });
-    return deferred;
+    // 4200
+    return deferred.promise();
 }
 
 function googleSignIn(googleUser){
@@ -38,13 +42,8 @@ function googleSignIn(googleUser){
             }
         })
     });
-    $.when(learnjs.awsRefresh()).then(function(id) {
-        learnjs.identity.resolve({
-            id: id,
-            email: googleUser.getBasicProfile().getEmail()
-        });
-    });
     // 4200
+    //  START: gapi-refresh
     function refresh() {
         return gapi.auth2.getAuthInstance().signIn({
             prompt: 'login'
@@ -55,6 +54,15 @@ function googleSignIn(googleUser){
             return learnjs.awsRefresh();    
         })
     }
+    //  END: gapi-refresh
+    // START: google-signin-getid
+    learnjs.awsRefresh().then(function(id) {
+        learnjs.identity.resolve({
+            id: id,
+            email: googleUser.getBasicProfile().getEmail(),
+            refresh: refresh
+        });
+    });
 }
 
 learnjs.showView = function(hash) {

@@ -1,5 +1,7 @@
 'use strict';
-var learnjs = {};
+var learnjs = {
+    poolId: 'ap-northeast-1:637202ea-b1e7-48c2-a0c7-c62913ec7668'
+};
 
 learnjs.problems = [
     {
@@ -12,8 +14,45 @@ learnjs.problems = [
     }
 ];
 
-function googleSignIn(){
-    console.log(arguments);
+// 4103
+learnjs.awsRefresh = function() {
+    var deferred = new $.Deferred();
+    AWS.config.credentials.refresh(function(err) {
+        if(err) {
+            deferred.reject(err);
+        } else {
+            deferred.resolve(AWS.config.credentials.identityId)
+        }
+    });
+}
+
+function googleSignIn(googleUser){
+    var id_token = googleUser.getAuthResponse().id_token;
+    AWS.config.update({
+        region: 'ap-northeast-1',
+        credentials: new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: learnjs.poolId,
+            Logins: {
+                'accounts.google.com' :id_token
+            }
+        })
+    });
+    $.when(learnjs.awsRefresh()).then(function(id) {
+        learnjs.identity.resolve({
+            id: id,
+            email: googleUser.getBasicProfile().getEmail()
+        });
+    });
+    // function refresh() {
+    //     return gapi.auth2.getAuthInstance().signIn({
+    //         prompt: 'login'
+    //     }).then(function(userUpdate) {
+    //         var creds = AWS.config.credentials;
+    //         var newToken = userUpdate.getAuthResponse().id_token;
+    //         creds.params.Logins['accounts.google.com'] = newToken;
+    //         return learnjs.awsRefresh();    
+    //     })
+    // }
 }
 
 learnjs.showView = function(hash) {

@@ -1,4 +1,5 @@
 describe('LearnJS', function() {
+    // 4101
     beforeEach(function() {
         learnjs.identity = new $.Deferred();
     });
@@ -49,7 +50,66 @@ describe('LearnJS', function() {
         expect(elem.fadeOut).toHaveBeenCalled();
         expect(elem.fadeIn).toHaveBeenCalled();
     });
+    // 4102 googleSignIn
+    describe('googleSignIn callback', function() {
+        var user, profile;
 
+        beforeEach(function() {
+            profile = jasmine.createSpyObj('profile', ['getEmail']);
+            spyOn(learnjs, 'awsRefresh').and.returnValue(new $.Deferred().resolve("COGNITO_ID"));
+            spyOn(AWS, 'CognitoIdentityCredentials');
+            user = jasmine.createSpyObj('user', ['getAuthResponse', 'getBasicProfile']);
+            user.getAuthResponse.and.returnValue({id_token: 'GOOGLE_ID'});
+            user.getBasicProfile.and.returnValue(profile);
+            profile.getEmail.and.returnValue('foo@bar.com');
+            googleSignIn(user);
+        });
+
+        it('sets the AWS region', function() {
+            expect(AWS.config.region).toEqual('ap-northeast-1');
+        });
+
+        it('sets the identity pool ID and Google ID token', function() {
+            expect(AWS.CognitoIdentityCredentials).toHaveBeenCalledWith({
+                IdentityPoolId: learnjs.poolId,
+                Logins: {
+                    'accounts.google.com': 'GOOGLE_ID'
+                }
+            });
+        });
+        it('fetched the AWS credentials and resolved ther deferred', function(done) {
+            learnjs.identity.done(function(identity) {
+                expect(identity.email).toEqual('foo@bar.com');
+                expect(identity.id).toEqual('COGNITO_ID');
+                done();
+            });
+        });
+    });
+    // 4103
+    describe('awsRefresh', function() {
+        var callbackArg, fakeCreds;
+
+        beforeEach(function() {
+            fakeCreds = jasmine.createSpyObj('creds', ['refresh']);
+            fakeCreds.identityId = 'COGNITO_ID';
+            AWS.config.credentials = fakeCreds;
+            fakeCreds.refresh.and.callFake(function(cb) { cb(callbackArg); });
+        });
+
+        it('returns a promise that resolves on success', function(done) {
+            learnjs.awsRefresh().then(function(id) {
+                expect(fakeCreds.identityId).toEqual('COGNITO_ID');
+            }).then(done, fail);
+        })
+
+        it('rejects the promise on a failure', function(done) {
+            callbackArg = 'error';
+            learnjs.awsRefresh().fail(function(err) {
+                expect(err).toEqual("error");
+                done();
+            });
+        });
+    })
     describe('problem view', function(){
         var view;
         beforeEach(function() {

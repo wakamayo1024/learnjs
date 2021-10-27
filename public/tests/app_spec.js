@@ -56,7 +56,7 @@ describe('LearnJS', function() {
 
         beforeEach(function() {
             profile = jasmine.createSpyObj('profile', ['getEmail']);
-            var refreshPromise = new $.Deferred().resolve('COGNITO_ID').promise();
+            var refreshPromise = new $.Deferred().resolve("COGNITO_ID").promise();
             spyOn(learnjs, 'awsRefresh').and.returnValue(refreshPromise);
             spyOn(AWS, 'CognitoIdentityCredentials');
             user = jasmine.createSpyObj('user', ['getAuthResponse', 'getBasicProfile']);
@@ -132,6 +132,7 @@ describe('LearnJS', function() {
                             'accounts.google.com': "GOOGLE_ID"
                         });
                         done();
+                    }).catch(function(err) {
                     });
                 });
             });

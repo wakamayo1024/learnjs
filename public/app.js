@@ -14,7 +14,7 @@ learnjs.problems = [
     }
 ];
 
-// 4200
+// 4103
 learnjs.identity = new $.Deferred();
 
 // 4103
@@ -68,6 +68,7 @@ function googleSignIn(googleUser){
 learnjs.showView = function(hash) {
     var routes = {
         '#problem': learnjs.problemView,
+        '#profile': learnjs.profileView,
         '#': learnjs.landingView,
         '': learnjs.landingView
     };
@@ -120,6 +121,18 @@ learnjs.problemView = function(data) {
 learnjs.landingView = function() {
     return learnjs.template('landing-view');
 }
+// END: landingView
+
+// 4100
+// START: profileView
+learnjs.profileView = function() {
+    var view = learnjs.template('profile-view');
+    learnjs.identity.done(function(identity) {
+        view.find('.email').text(identity.email);
+    });
+}
+// END: profileView
+
 // 3700
 learnjs.buildCorrectFlash = function(problemNum) {
     var correctFlash = learnjs.template('correct-flash');

@@ -22,6 +22,9 @@ learnjs.showView = function(hash) {
 
 // START: appOnReady
 learnjs.appOnReady = function() {
+  window.onhashchange = function() {
+    learnjs.showView(window.location.hash);
+  };
   learnjs.showView(window.location.hash);
 }
 // END: appOnReady

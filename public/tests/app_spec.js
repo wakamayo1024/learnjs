@@ -27,6 +27,15 @@ describe('LearnJS', function() {
   });
   // END: routerOnLoad
 
+  // START: hashChangeEvent
+  it('subscribes to the hash change event', function() {
+    learnjs.appOnReady();
+    spyOn(learnjs, 'showView');
+    $(window).trigger('hashchange');
+    expect(learnjs.showView).toHaveBeenCalledWith(window.location.hash);
+  });
+  // END: hashChangeEvent
+
   // START: problemView
   describe('problem view', function() {
     it('has a title that includes the problem number', function() {

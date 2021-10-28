@@ -90,6 +90,27 @@ describe('LearnJS', function() {
       expect(view.find('[data-name="code"]').text()).toEqual('function problem() { return __; }');
     });
 
+    describe('skip button', function() {
+      it('is added to the navbar when the view is added', function() {
+        expect($('.nav-list .skip-btn').length).toEqual(1);
+      });
+
+      it('is removed from the navbar when the view is removed', function() {
+        view.trigger('removingView');
+        expect($('.nav-list .skip-btn').length).toEqual(0);
+      });
+
+      it('contains a link to the next problem', function() {
+        expect($('.nav-list .skip-btn a').attr('href')).toEqual('#problem-2');
+      });
+
+      it('does not added when at the last problem', function() {
+        view.trigger('removingView');
+        view = learnjs.problemView('2');
+        expect($('.nav-list .skip-btn').length).toEqual(0);
+      });
+    });
+
     // START: problemViewAnswers
     describe('answer section', function() {
       var resultFlash;

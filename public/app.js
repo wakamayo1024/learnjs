@@ -164,7 +164,7 @@ learnjs.awsRefresh = function() {
       deferred.resolve(AWS.config.credentials.identityId);
     }
   });
-  return deferred;
+  return deferred.promise();
 }
 // END: awsRefresh
 
@@ -180,12 +180,25 @@ function googleSignIn(googleUser) {
       }
     })
   })
-// END: googleSignIn
+  // END: googleSignIn
+  // START: gapi-refresh
+  function refresh() {
+    return gapi.auth2.getAuthInstance().signIn({
+        prompt: 'login'
+      }).then(function(userUpdate) {
+      var creds = AWS.config.credentials;
+      var newToken = userUpdate.getAuthResponse().id_token;
+      creds.params.Logins['accounts.google.com'] = newToken;
+      return learnjs.awsRefresh();
+    });
+  }
+  // END: gapi-refresh
   // START: googleSignIn-getId
-  $.when(learnjs.awsRefresh()).then(function(id) {
+  learnjs.awsRefresh().then(function(id) {
     learnjs.identity.resolve({
       id: id,
-      email: googleUser.getBasicProfile().getEmail()
+      email: googleUser.getBasicProfile().getEmail(),
+      refresh: refresh
     });
   });
   // END: googleSignIn-getId

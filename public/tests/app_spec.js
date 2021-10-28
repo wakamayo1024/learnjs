@@ -130,7 +130,8 @@ describe('LearnJS', function() {
 
     beforeEach(function() {
       profile = jasmine.createSpyObj('profile', ['getEmail']);
-      spyOn(learnjs, 'awsRefresh').and.returnValue(new $.Deferred().resolve("COGNITO_ID"));
+      var refreshPromise = new $.Deferred().resolve("COGNITO_ID").promise();
+      spyOn(learnjs, 'awsRefresh').and.returnValue(refreshPromise);
       spyOn(AWS, 'CognitoIdentityCredentials');
       user = jasmine.createSpyObj('user',
           ['getAuthResponse', 'getBasicProfile']);
@@ -158,6 +159,40 @@ describe('LearnJS', function() {
         expect(identity.email).toEqual('foo@bar.com');
         expect(identity.id).toEqual('COGNITO_ID');
         done();
+      });
+    });
+
+    describe('refresh', function() {
+      var instanceSpy;
+      beforeEach(function() {
+        AWS.config.credentials = {params: {Logins: {}}};
+        var updateSpy = jasmine.createSpyObj('userUpdate', ['getAuthResponse']);
+        updateSpy.getAuthResponse.and.returnValue({id_token: "GOOGLE_ID"});
+        instanceSpy = jasmine.createSpyObj('instance', ['signIn']);
+        instanceSpy.signIn.and.returnValue(Promise.resolve(updateSpy));
+        var auth2Spy = jasmine.createSpyObj('auth2', ['getAuthInstance']);
+        auth2Spy.getAuthInstance.and.returnValue(instanceSpy);
+        window.gapi = { auth2: auth2Spy };
+      });
+
+      it('returns a promise when token is refreshed', function(done) {
+        learnjs.identity.done(function(identity) {
+          identity.refresh().then(function() {
+            expect(AWS.config.credentials.params.Logins).toEqual({
+              'accounts.google.com': "GOOGLE_ID"
+            });
+            done();
+          });
+        });
+      });
+
+      it('does not re-prompt for consent when refreshing the token in', function(done) {
+        learnjs.identity.done(function(identity) {
+          identity.refresh().then(function() {
+            expect(instanceSpy.signIn).toHaveBeenCalledWith({prompt: 'login'});
+            done();
+          });
+        });
       });
     });
   });

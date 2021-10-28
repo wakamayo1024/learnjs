@@ -134,3 +134,9 @@ learnjs.appOnReady = function() {
   learnjs.showView(window.location.hash);
 }
 // END: appOnReady
+
+// START: googleSignIn
+function googleSignIn() {
+  console.log(arguments);
+}
+// END: googleSignIn

@@ -61,6 +61,13 @@
     </style>
      <!-- END: inlineStyle -->
     </style>
+    <!-- START: googleSignIn -->
+    <meta name="google-signin-client_id"
+          content="351607165455-uesp1702cesp44vbn539m7rm6gg5ov3h.apps.googleusercontent.com">
+    <!-- END: googleSignIn -->
+    <!-- START: googleAPI -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- END: googleAPI -->
   </head>
   <body>
     <div class='markup'>
@@ -71,11 +78,15 @@
           <li><a class='text-lg' href="#">LearnJS</a></li>
           <li><a href="#problem-1">Start</a></li>
         </ul>
-        <!-- END: nav-list -->
-      </div>
-      <div class='view-container container'>
+        <div class='four columns'>
+          <span class='navbar-padding u-pull-right'>
+            <span class="g-signin2" data-onsuccess="googleSignIn"></span>
+          </span>
+        </div>
       </div>
       <!-- END: navbar -->
+      <div class='view-container container'>
+      </div>
       <div class='templates'>
         <div class='landing-view'>
         <!-- Markup Continues... -->

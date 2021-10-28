@@ -48,6 +48,14 @@ describe('LearnJS', function() {
   });
   // END: flashElement
 
+  // START: redirectEnd
+  it('can redirect to the main view after the last problem is answered', function() {
+    var flash = learnjs.buildCorrectFlash(2);
+    expect(flash.find('a').attr('href')).toEqual("");
+    expect(flash.find('a').text()).toEqual("You're Finished!");
+  });
+  // END: redirectEnd
+
   // START: problemView
   describe('problem view', function() {
     var view;

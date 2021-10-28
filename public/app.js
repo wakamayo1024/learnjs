@@ -39,9 +39,15 @@ learnjs.flashElement = function(elem, content) {
 // END: flashElement
 
 // START: buildCorrectFlash
-learnjs.buildCorrectFlash = function (problemNumber) {
+learnjs.buildCorrectFlash = function (problemNum) {
   var correctFlash = learnjs.template('correct-flash');
-  correctFlash.find('a').attr('href', '#problem-' + (problemNumber + 1));
+  var link = correctFlash.find('a');
+  if (problemNum < learnjs.problems.length) {
+    link.attr('href', '#problem-' + (problemNum + 1));
+  } else {
+    link.attr('href', '');
+    link.text("You're Finished!");
+  }
   return correctFlash;
 }
 // END: buildCorrectFlash
@@ -61,10 +67,8 @@ learnjs.problemView = function(data) {
   // START: problemViewClickHandler
   function checkAnswerClick() {
     if (checkAnswer()) {
-      // START_HIGHLIGHT
       var flashContent = learnjs.buildCorrectFlash(problemNumber);
       learnjs.flashElement(resultFlash, flashContent);
-      // END_HIGHLIGHT
     } else {
       learnjs.flashElement(resultFlash, 'Incorrect!');
     }

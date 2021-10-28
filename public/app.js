@@ -106,11 +106,22 @@ learnjs.landingView = function() {
 }
 // END: landingView
 
+// START: profileView
+learnjs.profileView = function() {
+  var view = learnjs.template('profile-view');
+  learnjs.identity.done(function(identity) {
+    view.find('.email').text(identity.email);
+  });
+  return view;
+}
+// END: profileView
+
 // START: showView
 learnjs.showView = function(hash) {
   // START: routes
   var routes = {
     '#problem': learnjs.problemView,
+    '#profile': learnjs.profileView,
     '#': learnjs.landingView,
     '': learnjs.landingView
   };

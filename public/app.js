@@ -1,6 +1,10 @@
 "use strict";
 
-var learnjs = {};
+// START: namespace
+var learnjs = {
+  poolId: 'us-east-1:aa0e6d15-02da-4304-a819-f316506257e0'
+};
+// END: namespace
 
 //START: dataModel
 learnjs.problems = [
@@ -147,7 +151,16 @@ learnjs.appOnReady = function() {
 // END: appOnReady
 
 // START: googleSignIn
-function googleSignIn() {
-  console.log(arguments);
+function googleSignIn(googleUser) {
+  var id_token = googleUser.getAuthResponse().id_token;
+  AWS.config.update({
+    region: 'us-east-1',
+    credentials: new AWS.CognitoIdentityCredentials({
+      IdentityPoolId: learnjs.poolId,
+      Logins: {
+        'accounts.google.com': id_token
+      }
+    })
+  })
 }
 // END: googleSignIn

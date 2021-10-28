@@ -39,7 +39,7 @@ learnjs.problemView = function(data) {
   var problemData = learnjs.problems[problemNumber - 1];
   var resultFlash = view.find('.result');
 
-  function checkAnswer() { //<label id="code.checkAnswer"/>
+  function checkAnswer() {
     var answer = view.find('.answer').val();
     var test = problemData.code.replace('__', answer) + '; problem();';
     return eval(test);
@@ -56,7 +56,7 @@ learnjs.problemView = function(data) {
       learnjs.flashElement(resultFlash, 'Incorrect!');
       // END_HIGHLIGHT
     }
-    return false; //<label id="code.returnFalse"/>
+    return false;
   }
   // END: problemViewClickHandler
 

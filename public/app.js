@@ -15,6 +15,12 @@ learnjs.problems = [
 ];
 // END: dataModel
 
+//START: triggerEvent
+learnjs.triggerEvent = function(name, args) {
+  $('.view-container>*').trigger(name, args);
+}
+//END: triggerEvent
+
 //START: template
 learnjs.template = function(name) {
   return $('.templates .' + name).clone();

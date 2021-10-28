@@ -19,6 +19,12 @@ describe('LearnJS', function() {
   });
   // END: viewParameter
 
+  it('triggers removingView event when removing the view', function() {
+    spyOn(learnjs, 'triggerEvent');
+    learnjs.showView('#problem-1');
+    expect(learnjs.triggerEvent).toHaveBeenCalledWith('removingView', []);
+  });
+
   // START: routerOnLoad
   it('invokes the router when loaded', function() {
     spyOn(learnjs, 'showView');

@@ -107,7 +107,10 @@ learnjs.showView = function(hash) {
   var hashParts = hash.split('-');
   var viewFn = routes[hashParts[0]];
   if (viewFn) {
+    // START: triggerRemove
+    learnjs.triggerEvent('removingView', []);
     $('.view-container').empty().append(viewFn(hashParts[1]));
+    // END: triggerRemove
   }
 }
 // END: showView

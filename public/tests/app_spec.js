@@ -19,6 +19,14 @@ describe('LearnJS', function() {
   });
   // END: viewParameter
 
+  // START: routerOnLoad
+  it('invokes the router when loaded', function() {
+    spyOn(learnjs, 'showView');
+    learnjs.appOnReady();
+    expect(learnjs.showView).toHaveBeenCalledWith(window.location.hash);
+  });
+  // END: routerOnLoad
+
   // START: problemView
   describe('problem view', function() {
     it('has a title that includes the problem number', function() {

@@ -19,9 +19,14 @@
     </style>
   </head>
   <body>
+    <!-- START: viewContainer -->
     <div class='markup'>
       <div class='view-container container'>
+      </div>
+      <div class='templates'>
         <div class='landing-view'>
+        <!-- Markup Continues... -->
+        <!-- END: viewContainer -->
           <div class='row'>
             <div class='one-half column'>
               <h3>Learn JavaScript, one puzzle at a time.</h3>
@@ -34,9 +39,8 @@
             </div>
           </div>
         </div>
-      </div>
-      <!-- START: problemView -->
-      <div class='templates'>
+
+        <!-- START: problemView -->
         <div class='problem-view'>
           <h3 class='title'></h3>
           <p data-name='description'></p>
@@ -49,6 +53,7 @@
             </div>
           </form>
         </div>
+        <!-- END: problemView -->
 
         <!-- START: correctFlash -->
         <div class='correct-flash'>
@@ -56,7 +61,6 @@
         </div>
         <!-- END: correctFlash -->
       </div>
-      <!-- END: problemView -->
     </div>
     <script type='text/javascript'>
       $(window).ready(learnjs.appOnReady);

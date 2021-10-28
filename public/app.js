@@ -83,11 +83,20 @@ learnjs.problemView = function(data) {
 }
 // END: problemView
 
+// START: landingView
+learnjs.landingView = function() {
+  return learnjs.template('landing-view');
+}
+// END: landingView
+
 // START: showView
 learnjs.showView = function(hash) {
+  // START: routes
   var routes = {
-    '#problem': learnjs.problemView
+    '#problem': learnjs.problemView,
+    '': learnjs.landingView
   };
+  // END: routes
   var hashParts = hash.split('-');
   var viewFn = routes[hashParts[0]];
   if (viewFn) {

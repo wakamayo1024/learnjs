@@ -34,12 +34,7 @@ describe('LearnJS', function() {
         $(window).trigger('hashchange');
         expect(learnjs.showView).toHaveBeenCalledWith(window.location.hash);
     });
-    it('can redirect to the main view after the last problem in anserd', function(){
-        var view = learnjs.buildCorrectFlash(2);
-        expect(view.find('a').text()).toEqual("You're Finished!");
-        expect(view.find('a').attr('href')).toEqual("");
-    });
-
+    // START: flashElement
     // 3400
     it('can flash an element while setting the text', function() {
         var elem = $('<p>');
@@ -50,41 +45,23 @@ describe('LearnJS', function() {
         expect(elem.fadeOut).toHaveBeenCalled();
         expect(elem.fadeIn).toHaveBeenCalled();
     });
-    // 4102 googleSignIn
-    describe('googleSignIn callback', function() {
-        var user, profile;
+    // END: flashElement
 
-        beforeEach(function() {
-            profile = jasmine.createSpyObj('profile', ['getEmail']);
-            var refreshPromise = new $.Deferred().resolve("COGNITO_ID").promise();
-            spyOn(learnjs, 'awsRefresh').and.returnValue(refreshPromise);
-            spyOn(AWS, 'CognitoIdentityCredentials');
-            user = jasmine.createSpyObj('user', ['getAuthResponse', 'getBasicProfile']);
-            user.getAuthResponse.and.returnValue({id_token: 'GOOGLE_ID'});
-            user.getBasicProfile.and.returnValue(profile);
-            profile.getEmail.and.returnValue('foo@bar.com');
-            googleSignIn(user);
-        });
+    // START: redirectEnd
+    it('can redirect to the main view after the last problem in anserd', function(){
+        var view = learnjs.buildCorrectFlash(2);
+        expect(view.find('a').text()).toEqual("You're Finished!");
+        expect(view.find('a').attr('href')).toEqual("");
+    });
+    // END: redirectEnd
 
-        it('sets the AWS region', function() {
-            expect(AWS.config.region).toEqual('ap-northeast-1');
-        });
-
-        it('sets the identity pool ID and Google ID token', function() {
-            expect(AWS.CognitoIdentityCredentials).toHaveBeenCalledWith({
-                IdentityPoolId: learnjs.poolId,
-                Logins: {
-                    'accounts.google.com': 'GOOGLE_ID'
-                }
-            });
-        });
-        it('fetched the AWS credentials and resolved ther deferred', function(done) {
-            learnjs.identity.done(function(identity) {
-                expect(identity.email).toEqual('foo@bar.com');
-                expect(identity.id).toEqual('COGNITO_ID');
-                done();
-            });
-        });
+    it('can trigger events on the view', function() {
+        callback = jasmine.createSpy('callback');
+        var div = $('<div>').bind('fooEvent',callback);
+        $('.view-container').append(div);
+        learnjs.triggerEvent('fooEvent', ['bar']);
+        expect(callback).toHaveBeenCalled();
+        expect(callback.calls.argsFor(0)[1]).toEqual('bar');
     });
     // 4103
     describe('awsRefresh', function() {
@@ -110,14 +87,68 @@ describe('LearnJS', function() {
                 done();
             });
         });
+    });
 
+    // START: profileView
+    describe('profile view', function() {
+        var view;
+        beforeEach(function() {
+            view = learnjs.profileView();
+        });
+        it('shows the users email address when they log in', function() {
+            learnjs.identity.resolve({
+                email: 'foo@bar.com'
+            });
+            expect(view.find('.email').text()).toEqual("foo@bar.com");
+        });
+        it('shows no email when the user is not logged in yet', function() {
+            expect(view.find('.email').text()).toEqual("");
+        });
+    });
+
+    // 4102 googleSignIn
+    describe('googleSignIn callback', function() {
+        var user, profile;
+
+        beforeEach(function() {
+            profile = jasmine.createSpyObj('profile', ['getEmail']);
+            var refreshPromise = new $.Deferred().resolve("COGNITO_ID").promise();
+            spyOn(learnjs, 'awsRefresh').and.returnValue(refreshPromise);
+            spyOn(AWS, 'CognitoIdentityCredentials');
+            user = jasmine.createSpyObj('user',
+                ['getAuthResponse', 'getBasicProfile']);
+            user.getAuthResponse.and.returnValue({id_token: 'GOOGLE_ID'});
+            user.getBasicProfile.and.returnValue(profile);
+            profile.getEmail.and.returnValue('foo@bar.com');
+            googleSignIn(user);
+        });
+
+        it('sets the AWS region', function() {
+            expect(AWS.config.region).toEqual('ap-northeast-1');
+        });
+
+        it('sets the identity pool ID and Google ID token', function() {
+            expect(AWS.CognitoIdentityCredentials).toHaveBeenCalledWith({
+                IdentityPoolId: learnjs.poolId,
+                Logins: {
+                    'accounts.google.com': 'GOOGLE_ID'
+                }
+            });
+        });
+        it('fetched the AWS credentials and resolved ther deferred', function(done) {
+            learnjs.identity.done(function(identity) {
+                expect(identity.email).toEqual('foo@bar.com');
+                expect(identity.id).toEqual('COGNITO_ID');
+                done();
+            });
+        });
         // 4200
         describe('refresh', function() {
             var instanceSpy;
             beforeEach(function() {
                 AWS.config.credentials = {params: {Logins: {}}};
                 var updateSpy = jasmine.createSpyObj('userUpdate', ['getAuthResponse']);
-                updateSpy.getAuthResponse.and.returnValue({id_token: "GOOGLE_id"});
+                updateSpy.getAuthResponse.and.returnValue({id_token: "GOOGLE_ID"});
                 instanceSpy = jasmine.createSpyObj('instance', ['signIn']);
                 instanceSpy.signIn.and.returnValue(Promise.resolve(updateSpy));
                 var auth2Spy = jasmine.createSpyObj('auth2', ['getAuthInstance']);
@@ -132,7 +163,6 @@ describe('LearnJS', function() {
                             'accounts.google.com': "GOOGLE_ID"
                         });
                         done();
-                    }).catch(function(err) {
                     });
                 });
             });
@@ -146,15 +176,12 @@ describe('LearnJS', function() {
             });
         });
     });
+
     describe('problem view', function(){
         var view;
         beforeEach(function() {
             view = learnjs.problemView('1');
         });
-        // it('has a title that includes the problem number',function(){
-            // var view = learnjs.problemView('1');
-            // expect(view.text()).toEqual('Problem #1 Coming soon!')
-        // });
 
         it('has a title that includes the problem number',function() {
             expect(view.find('.title').text()).toEqual('Problem #1');
@@ -212,7 +239,7 @@ describe('LearnJS', function() {
                     expect(link.text()).toEqual('Next Problem');
                     expect(link.attr('href')).toEqual('#problem-2')
                 });
-            })
+            });
             // 3300
             it('rejects an incorrect answer', function() {
                 view.find('.answer').val('false');
@@ -221,6 +248,7 @@ describe('LearnJS', function() {
                 expect(learnjs.flashElement).toHaveBeenCalledWith(resultFlash, 'Incorrect!');
             });
         });
+        // END: problemViewAnswers
     });
-
+    // END: problemView
 });

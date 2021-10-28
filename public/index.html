@@ -11,7 +11,7 @@
     <script src='/app.js'></script>
     <!-- START: inlineStyle -->
     <style type="text/css" media="all">
-      body { margin-top: 30px; }
+      body { margin-top: 60px; }
       .templates { display: none; }
       .fixed-width-text { font-family: "Consolas","Courier New",monospace }
       /* START: no-select */
@@ -25,9 +25,7 @@
       /* START: nav-container */
       .nav-container {
         padding-left: 40px;
-        height: 25px;
         background: #666;
-        width: 100%;
       }
       .nav-container a { color: white; }
       /* END: nav-container */
@@ -39,6 +37,9 @@
       }
       /* END: fixed-top */
       /* START: inline-list */
+      .inline-list {
+        margin-bottom: 0px; /* Skeleton reset */
+      }
       .inline-list li {
         display: inline;
         margin: 0 20px 0 0;
@@ -48,6 +49,15 @@
       .hover-links a { text-decoration: none; }
       .hover-links a:hover { text-decoration: underline; }
       /* END: hover-links */
+      /* START: navbar-padding */
+      .navbar-padding {
+        padding-top: 7px;
+        display: inline-block;
+      }
+      /* END: navbar-padding */
+      .text-lg {
+        font-size: 32px;
+      }
     </style>
      <!-- END: inlineStyle -->
     </style>
@@ -55,9 +65,9 @@
   <body>
     <div class='markup'>
       <!-- START: navbar -->
-      <div class='nav-container no-select fixed-top'>
-        <ul class='inline-list hover-links'>
-          <li><a href="#">LearnJS</a></li>
+      <div class='nav-container no-select fixed-top u-full-width'>
+        <ul class='inline-list hover-links nav-list six columns'>
+          <li><a class='text-lg' href="#">LearnJS</a></li>
           <li><a href="#problem-1">Start</a></li>
         </ul>
       </div>

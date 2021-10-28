@@ -6,6 +6,10 @@ var learnjs = {
 };
 // END: namespace
 
+// START: identityDeferred
+learnjs.identity = new $.Deferred();
+// END: identityDeferred
+
 //START: dataModel
 learnjs.problems = [
   {
@@ -150,6 +154,20 @@ learnjs.appOnReady = function() {
 }
 // END: appOnReady
 
+// START: awsRefresh
+learnjs.awsRefresh = function() {
+  var deferred = new $.Deferred();
+  AWS.config.credentials.refresh(function(err) {
+    if (err) {
+      deferred.reject(err);
+    } else {
+      deferred.resolve(AWS.config.credentials.identityId);
+    }
+  });
+  return deferred;
+}
+// END: awsRefresh
+
 // START: googleSignIn
 function googleSignIn(googleUser) {
   var id_token = googleUser.getAuthResponse().id_token;
@@ -162,5 +180,15 @@ function googleSignIn(googleUser) {
       }
     })
   })
+// END: googleSignIn
+  // START: googleSignIn-getId
+  $.when(learnjs.awsRefresh()).then(function(id) {
+    learnjs.identity.resolve({
+      id: id,
+      email: googleUser.getBasicProfile().getEmail()
+    });
+  });
+  // END: googleSignIn-getId
+// START: googleSignIn
 }
 // END: googleSignIn

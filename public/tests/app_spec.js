@@ -77,6 +77,31 @@ describe('LearnJS', function() {
     expect(callback.calls.argsFor(0)[1]).toEqual('bar');
   });
 
+  describe('awsRefresh', function() {
+    var callbackArg, fakeCreds;
+
+    beforeEach(function() {
+      fakeCreds = jasmine.createSpyObj('creds', ['refresh']);
+      fakeCreds.identityId = 'COGNITO_ID';
+      AWS.config.credentials = fakeCreds;
+      fakeCreds.refresh.and.callFake(function(cb) { cb(callbackArg); });
+    });
+
+    it('returns a promise that resolves on success', function(done) {
+      learnjs.awsRefresh().then(function(id) {
+        expect(fakeCreds.identityId).toEqual('COGNITO_ID');
+      }).then(done, fail);
+    });
+
+    it('rejects the promise on a failure', function(done) {
+      callbackArg = 'error';
+      learnjs.awsRefresh().fail(function(err) {
+        expect(err).toEqual("error");
+        done();
+      });
+    });
+  });
+
   // START: profileView
   describe('profile view', function() {
     var view;
@@ -101,15 +126,14 @@ describe('LearnJS', function() {
 
   // START: googleSignIn
   describe('googleSignIn callback', function() {
-    var user, fakeCreds;
+    var user, profile;
 
     beforeEach(function() {
       profile = jasmine.createSpyObj('profile', ['getEmail']);
-      fakeCreds = jasmine.createSpyObj('creds', ['refresh']);
-      fakeCreds.refresh.and.callFake(function(c) { c() });
-      fakeCreds.identityId = "COGNITO_ID"
-      spyOn(AWS, 'CognitoIdentityCredentials').and.returnValue(fakeCreds);
-      user = jasmine.createSpyObj('user', ['getAuthResponse', 'getBasicProfile']);
+      spyOn(learnjs, 'awsRefresh').and.returnValue(new $.Deferred().resolve("COGNITO_ID"));
+      spyOn(AWS, 'CognitoIdentityCredentials');
+      user = jasmine.createSpyObj('user',
+          ['getAuthResponse', 'getBasicProfile']);
       user.getAuthResponse.and.returnValue({id_token: 'GOOGLE_ID'});
       user.getBasicProfile.and.returnValue(profile);
       profile.getEmail.and.returnValue('foo@bar.com');
@@ -126,6 +150,14 @@ describe('LearnJS', function() {
         Logins: {
           'accounts.google.com': 'GOOGLE_ID'
         }
+      });
+    });
+
+    it('fetches the AWS credentials and resolved the deferred', function(done) {
+      learnjs.identity.done(function(identity) {
+        expect(identity.email).toEqual('foo@bar.com');
+        expect(identity.id).toEqual('COGNITO_ID');
+        done();
       });
     });
   });

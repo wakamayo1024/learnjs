@@ -14,19 +14,59 @@
       body { margin-top: 30px; }
       .templates { display: none; }
       .fixed-width-text { font-family: "Consolas","Courier New",monospace }
+      /* START: no-select */
+      .no-select {
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        -moz-user-select: none;
+      }
+      /* END: no-select */
+      /* START: nav-container */
+      .nav-container {
+        padding-left: 40px;
+        height: 25px;
+        background: #666;
+        width: 100%;
+      }
+      .nav-container a { color: white; }
+      /* END: nav-container */
+      /* START: fixed-top */
+      .fixed-top {
+        position: fixed;
+        top: 0px;
+        z-index: 1024;
+      }
+      /* END: fixed-top */
+      /* START: inline-list */
+      .inline-list li {
+        display: inline;
+        margin: 0 20px 0 0;
+      }
+      /* END: inline-list */
+      /* START: hover-links */
+      .hover-links a { text-decoration: none; }
+      .hover-links a:hover { text-decoration: underline; }
+      /* END: hover-links */
     </style>
      <!-- END: inlineStyle -->
     </style>
   </head>
   <body>
-    <!-- START: viewContainer -->
     <div class='markup'>
+      <!-- START: navbar -->
+      <div class='nav-container no-select fixed-top'>
+        <ul class='inline-list hover-links'>
+          <li><a href="#">LearnJS</a></li>
+          <li><a href="#problem-1">Start</a></li>
+        </ul>
+      </div>
       <div class='view-container container'>
       </div>
+      <!-- END: navbar -->
       <div class='templates'>
         <div class='landing-view'>
         <!-- Markup Continues... -->
-        <!-- END: viewContainer -->
           <div class='row'>
             <div class='one-half column'>
               <h3>Learn JavaScript, one puzzle at a time.</h3>

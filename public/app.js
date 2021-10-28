@@ -94,6 +94,7 @@ learnjs.showView = function(hash) {
   // START: routes
   var routes = {
     '#problem': learnjs.problemView,
+    '#': learnjs.landingView,
     '': learnjs.landingView
   };
   // END: routes

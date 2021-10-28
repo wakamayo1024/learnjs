@@ -2,11 +2,13 @@
 
 var learnjs = {};
 
+// START: problemView
 learnjs.problemView = function(problemNumber) {
   var view = $('.templates .problem-view').clone();
   view.find('.title').text('Problem #' + problemNumber);
   return view;
 }
+// END: problemView
 
 // START: showView
 learnjs.showView = function(hash) {

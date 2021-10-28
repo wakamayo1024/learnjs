@@ -23,12 +23,21 @@ learnjs.applyObject = function(obj, elem) {
 };
 // END: applyObject
 
+// START: flashElement
+learnjs.flashElement = function(elem, content) {
+  elem.fadeOut('fast', function() {
+    elem.html(content);
+    elem.fadeIn();
+  });
+}
+// END: flashElement
+
 // START: problemView
 learnjs.problemView = function(data) {
   var problemNumber = parseInt(data, 10);
   var view = $('.templates .problem-view').clone();
-  var problemData = learnjs.problems[problemNumber - 1]; //<label id="code.problemData"/>
-  var resultFlash = view.find('.result'); //<label id="code.resultFlash"/>
+  var problemData = learnjs.problems[problemNumber - 1];
+  var resultFlash = view.find('.result');
 
   function checkAnswer() { //<label id="code.checkAnswer"/>
     var answer = view.find('.answer').val();
@@ -36,16 +45,22 @@ learnjs.problemView = function(data) {
     return eval(test);
   }
 
-  function checkAnswerClick() { //<label id="code.checkAnswerClick"/>
+  // START: problemViewClickHandler
+  function checkAnswerClick() {
     if (checkAnswer()) {
-      resultFlash.text('Correct!');
+      // START_HIGHLIGHT
+      learnjs.flashElement(resultFlash, 'Correct!');
+      // END_HIGHLIGHT
     } else {
-      resultFlash.text('Incorrect!');
+      // START_HIGHLIGHT
+      learnjs.flashElement(resultFlash, 'Incorrect!');
+      // END_HIGHLIGHT
     }
-    return false;
+    return false; //<label id="code.returnFalse"/>
   }
+  // END: problemViewClickHandler
 
-  view.find('.check-btn').click(checkAnswerClick); //<label id="code.clickBind"/>
+  view.find('.check-btn').click(checkAnswerClick);
   view.find('.title').text('Problem #' + problemNumber);
   learnjs.applyObject(problemData, view);
   return view;

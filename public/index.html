@@ -13,6 +13,7 @@
     <style type="text/css" media="all">
       body { margin-top: 30px; }
       .templates { display: none; }
+      .fixed-width-text { font-family: "Consolas","Courier New",monospace }
     </style>
      <!-- END: inlineStyle -->
     </style>
@@ -40,15 +41,13 @@
           <h3 class='title'></h3>
           <p data-name='description'></p>
           <pre><code data-name='code'></code></pre>
-          <!-- START_HIGHLIGHT -->
           <form>
-            <textarea class='u-full-width answer'></textarea>
+            <textarea class='u-full-width answer fixed-width-text'></textarea>
             <div>
               <button class='button-primary check-btn'>Check Answer</button>
               <p class='result'></p>
             </div>
           </form>
-          <!-- END_HIGHLIGHT -->
         </div>
       </div>
       <!-- END: problemView -->

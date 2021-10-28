@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var learnjs = {};
 
@@ -6,12 +6,21 @@ learnjs.problemView = function() {
   return $('<div class="problem-view">').text('Coming soon!');
 }
 
+// START: showView
 learnjs.showView = function(hash) {
   var routes = {
-    '#problem-1': learnjs.problemView
+    // START_HIGHLIGHT
+    '#problem': learnjs.problemView
+    // END_HIGHLIGHT
   };
-  var viewFn = routes[hash];
+  // START_HIGHLIGHT
+  var hashParts = hash.split('-');
+  var viewFn = routes[hashParts[0]];
+  // END_HIGHLIGHT
   if (viewFn) {
-    $('.view-container').empty().append(viewFn());
+    // START_HIGHLIGHT
+    $('.view-container').empty().append(viewFn(hashParts[1]));
+    // END_HIGHLIGHT
   }
 }
+// END: showView

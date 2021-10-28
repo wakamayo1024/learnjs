@@ -15,10 +15,22 @@ learnjs.problems = [
 ];
 // END: dataModel
 
+// START: applyObject
+learnjs.applyObject = function(obj, elem) {
+  for (var key in obj) {
+    elem.find('[data-name="' + key + '"]').text(obj[key]);
+  }
+};
+// END: applyObject
+
 // START: problemView
-learnjs.problemView = function(problemNumber) {
+learnjs.problemView = function(data) {
+  var problemNumber = parseInt(data, 10);
   var view = $('.templates .problem-view').clone();
   view.find('.title').text('Problem #' + problemNumber);
+  // START_HIGHLIGHT
+  learnjs.applyObject(learnjs.problems[problemNumber - 1], view);
+  // END_HIGHLIGHT
   return view;
 }
 // END: problemView

@@ -103,6 +103,13 @@
           </div>
         </div>
 
+        <!-- START: profileView -->
+        <div class='profile-view'>
+          <h3>Your Profile</h3>
+          <div class='email'></div>
+        </div>
+        <!-- END: profileView -->
+
         <!-- START: problemView -->
         <div class='problem-view'>
           <h3 class='title'></h3>

@@ -43,6 +43,14 @@ learnjs.applyObject = function(obj, elem) {
 };
 // END: applyObject
 
+// START: addProfileLink
+learnjs.addProfileLink = function(profile) {
+  var link = learnjs.template('profile-link');
+  link.find('a').text(profile.email);
+  $('.signin-bar').prepend(link);
+}
+// END: addProfileLink
+
 // START: flashElement
 learnjs.flashElement = function(elem, content) {
   elem.fadeOut('fast', function() {
@@ -151,6 +159,7 @@ learnjs.appOnReady = function() {
     learnjs.showView(window.location.hash);
   };
   learnjs.showView(window.location.hash);
+  learnjs.identity.done(learnjs.addProfileLink);
 }
 // END: appOnReady
 

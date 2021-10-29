@@ -63,6 +63,19 @@ describe('LearnJS', function() {
         expect(callback).toHaveBeenCalled();
         expect(callback.calls.argsFor(0)[1]).toEqual('bar');
     });
+    // 4300
+    it('adds the profile link when the user logs in', function() {
+        var profile = {email: 'foo@bar.com'};
+        spyOn(learnjs, 'addProfileLink');
+        learnjs.appOnReady();
+        learnjs.identity.resolve(profile);
+        expect(learnjs.addProfileLink).toHaveBeenCalledWith(profile);
+    });
+
+    it('can append a profile view link to navbar', function() {
+        learnjs.addProfileLink({email: 'foo@bar.com'});
+        expect($('.signin-bar a').attr('href')).toEqual('#profile');
+    });
     // 4103
     describe('awsRefresh', function() {
         var callbackArg, fakeCreds;

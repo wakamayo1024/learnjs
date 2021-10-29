@@ -33,6 +33,13 @@ learnjs.applyObject = function(obj, elem) {
     }
 }
 
+// 4300
+learnjs.addProfileLink = function(profile) {
+    var link = learnjs.template('profile-link');
+    link.find('a').text(profile.email);
+    $('.signin-bar').prepend(link);
+}
+
 learnjs.flashElement = function(elem, content) {
     elem.fadeOut('fast', function() {
         elem.html(content);
@@ -126,6 +133,7 @@ learnjs.appOnReady = function() {
         learnjs.showView(window.location.hash);
     };
     learnjs.showView(window.location.hash);
+    learnjs.identity.done(learnjs.addProfileLink);
 }
 
 // 4103

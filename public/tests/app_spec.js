@@ -237,8 +237,13 @@ describe('LearnJS', function() {
             // 3500
             describe('when the answer is correct', function() {
                 beforeEach(function() {
+                    spyOn(learnjs, 'saveAnswer');
                     view.find('.answer').val('true');
                     view.find('.check-btn').click();
+                });
+                // 3100
+                it('saves the result', function(){
+                    expect(learnjs.saveAnswer).toHaveBeenCalledWith(1, 'true');
                 });
                 // 3500
                 it('flash the result', function() {

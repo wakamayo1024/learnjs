@@ -76,6 +76,40 @@ describe('LearnJS', function() {
         learnjs.addProfileLink({email: 'foo@bar.com'});
         expect($('.signin-bar a').attr('href')).toEqual('#profile');
     });
+    // 5200
+    describe('saveAnswer', function() {
+        var dbspy, req, identityObj;
+        beforeEach(function() {
+            dbspy = jasmine.createSpyObj('db', ['put']);
+            dbspy.put.and.returnValue('request');
+            spyOn(AWS.DynamoDB, 'DocumentClient').and.returnValue(dbspy);
+            spyOn(learnjs, 'sendDbRequest');
+            identityObj = {id: 'COGNITO_ID'};
+            learnjs.identity.resolve(identityObj);
+        });
+
+        it('writes the item to the database', function() {
+            learnjs.saveAnswer(1, {});
+            expect(learnjs.sendDbRequest).toHaveBeenCalledWith('request', jasmine.any(Function));
+            expect(dbspy.put).toHaveBeenCalledWith({
+                TableName: 'learnjs',
+                Item: {
+                    userId: 'COGNITO_ID',
+                    problemId: 1,
+                    answer: {}
+                }
+            });
+        });
+
+        it('resubmits the request on retry', function() {
+            learnjs.saveAnswer(1, {answer: 'false'});
+            spyOn(learnjs, 'saveAnswer').and.returnValue('promise');
+            expect(learnjs.sendDbRequest.calls.first().args[1]()).toEqual('promise');
+            expect(learnjs.saveAnswer).toHaveBeenCalledWith(1, {answer:'false'});
+        });
+    });
+    
+
     // 4103
     describe('awsRefresh', function() {
         var callbackArg, fakeCreds;

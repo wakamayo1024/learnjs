@@ -1,0 +1,25 @@
+{
+    "FunctionName": "popularAnswers",
+    "FunctionArn": "arn:aws:lambda:ap-northeast-1:100449931955:function:popularAnswers",
+    "Runtime": "nodejs12.x",
+    "Role": "arn:aws:iam::100449931955:role/learnjs_lambda_exec",
+    "Handler": "index.popularAnswers",
+    "CodeSize": 786671,
+    "Description": "",
+    "Timeout": 5,
+    "MemorySize": 512,
+    "LastModified": "2021-12-04T07:35:40.686+0000",
+    "CodeSha256": "zbi7oyzX4GtphzMYJioTFBnAXl7O8qr4St0ydzwzLk4=",
+    "Version": "1",
+    "TracingConfig": {
+        "Mode": "PassThrough"
+    },
+    "RevisionId": "71a5ab83-a41f-4313-bddd-32fbc7ba517b",
+    "State": "Pending",
+    "StateReason": "The function is being created.",
+    "StateReasonCode": "Creating",
+    "PackageType": "Zip",
+    "Architectures": [
+        "x86_64"
+    ]
+}

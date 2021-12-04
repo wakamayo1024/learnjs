@@ -178,6 +178,22 @@ learnjs.fetchAnswer = function(problemId) {
     });
 };
 // END:fetchAnswer
+// 5500
+// START:countAnswers
+learnjs.countAnswers = function(problemId) {
+    return learnjs.identity.then(function(identity) {
+        var db = new AWS.DynamoDB.DocumentClient();
+        var params = {
+            TableName: 'learnjs',
+            Select: 'COUNT',
+            FilterExpression: 'problemId = :problemId',
+            ExpressionAttributeValues: {':problemId': problemId}
+        };
+        return learnjs.sendDbRequest(db.scan(params), function() {
+            return learnjs.countAnswers(problemId);
+        });
+    });
+}
 //5100
 learnjs.saveAnswer = function(problemId, answer) {
     return learnjs.identity.then(function(identity) {

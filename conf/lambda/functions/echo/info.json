@@ -1,0 +1,25 @@
+{
+    "FunctionName": "echo",
+    "FunctionArn": "arn:aws:lambda:ap-northeast-1:100449931955:function:echo",
+    "Runtime": "nodejs12.x",
+    "Role": "arn:aws:iam::100449931955:role/learnjs_lambda_exec",
+    "Handler": "index.echo",
+    "CodeSize": 786671,
+    "Description": "",
+    "Timeout": 5,
+    "MemorySize": 128,
+    "LastModified": "2021-12-04T07:19:28.824+0000",
+    "CodeSha256": "zd6NDrHwnHLz/8T3UR5/uUlFkNco7WnZpjgIvC3oMxo=",
+    "Version": "2",
+    "TracingConfig": {
+        "Mode": "PassThrough"
+    },
+    "RevisionId": "93df7ad4-bd0e-4683-b619-ec8d50234a26",
+    "State": "Pending",
+    "StateReason": "The function is being created.",
+    "StateReasonCode": "Creating",
+    "PackageType": "Zip",
+    "Architectures": [
+        "x86_64"
+    ]
+}

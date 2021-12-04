@@ -2,9 +2,9 @@
     "Role": {
         "Path": "/",
         "RoleName": "learnjs_lambda_exec",
-        "RoleId": "AROAROY2IKKZ423TWROFA",
+        "RoleId": "AROAROY2IKKZTWD5IJ7PU",
         "Arn": "arn:aws:iam::100449931955:role/learnjs_lambda_exec",
-        "CreateDate": "2021-12-04T06:35:55Z",
+        "CreateDate": "2021-12-04T07:15:22Z",
         "AssumeRolePolicyDocument": {
             "Version": "2012-10-17",
             "Statement": [

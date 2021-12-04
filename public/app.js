@@ -90,6 +90,14 @@ learnjs.problemView = function(data) {
             buttonItem.remove();
         })
     }
+    // 5300
+    // START: problemVewFetchAnswer
+    learnjs.fetchAnswer(problemNumber).then(function(data) {
+        if(data.Item) {
+            answer.val(data.Item.answer);
+        }
+    });
+    // END:problemViewFetchAnswer
     view.find('.check-btn').click(checkAnswerClick);
     view.find('.title').text('Problem #' + problemNumber);
     learnjs.applyObject(problemData, view);
@@ -152,7 +160,12 @@ learnjs.sendDbRequest = function(req, retry ) {
     return promise;
 }
 // END:sendDbRequest
+// 5300
+// START:fetchAnswer
+learnjs.fetchAnswer = function(problemId) {
 
+};
+// END:fetchAnswer
 //5100
 learnjs.saveAnswer = function(problemId, answer) {
     return learnjs.identity.then(function(identity) {

@@ -108,7 +108,42 @@ describe('LearnJS', function() {
             expect(learnjs.saveAnswer).toHaveBeenCalledWith(1, {answer:'false'});
         });
     });
-    
+    describe('sendDbRequest', function(){
+        var request, requestHandlers, promise, retrySpy;
+        beforeEach(function() {
+            requestHandlers = {};
+            request = jasmine.createSpyObj('request', ['send', 'on']);
+            request.on.and.callFake(function(eventName, callback) {
+                requestHandlers[eventName] = callback;
+            });
+            retrySpy = jasmine.createSpy('retry');
+            promise = learnjs.sendDbRequest(request, retrySpy);
+        });
+        
+        it('resolves the returned promise on success', function(done) {
+            requestHandlers.success({data: 'data'});
+            expect(request.send).toHaveBeenCalled();
+            promise.then(function(data) {
+                expect(data).toEqual('data');
+                done();
+            }, fail);
+        });
+
+        it('rejects the returned promise on error', function(done) {
+            learnjs.identity.resolve({refresh: function() { return new $.Deferred().reject()}});
+            requestHandlers.error({code: "SomeError"});
+            promise.fail(function(resp) {
+                expect(resp).toEqual({code: "SomeError"});
+                done();
+            });
+        });
+
+        it('refreshes the credentials and retries when the credentials are expired', function() {
+            learnjs.identity.resolve({refresh: function() { return new $.Deferred().resolve()}});
+            requestHandlers.error({code: "CredentialsError"});
+            expect(retrySpy).toHaveBeenCalled();
+        });
+    });
 
     // 4103
     describe('awsRefresh', function() {

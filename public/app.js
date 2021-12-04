@@ -163,7 +163,19 @@ learnjs.sendDbRequest = function(req, retry ) {
 // 5300
 // START:fetchAnswer
 learnjs.fetchAnswer = function(problemId) {
-
+    return learnjs.identity.then(function(identity) {
+        var db = new AWS.DynamoDB.DocumentClient();
+        var item = {
+            TableName: 'learnjs',
+            Key: {
+                userId: identity.id,
+                problemId: problemId
+            }
+        };
+        return learnjs.sendDbRequest(db.get(item), function() {
+            return learnjs.fetchAnswer(problemId);
+        });
+    });
 };
 // END:fetchAnswer
 //5100

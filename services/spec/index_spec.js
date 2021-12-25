@@ -22,7 +22,8 @@ describe('lambda function', function() {
     it('requests problems with the given problem number', function() {
       index.popularAnswers({problemNumber: 42}, context);
       expect(index.dynamodb.scan).toHaveBeenCalledWith({
-        Key: {problemNumber: 42},
+        FilterExpression: "problemId = :problemId",
+        ExpressionAttributeValues: {":problemId": 42},
         TableName: 'learnjs'
       }, jasmine.any(Function));
     });

@@ -35,7 +35,10 @@ function filterItems(items) {
 
 exports.popularAnswers = function(json, context) {
   exports.dynamodb.scan({
-    Key: {problemNumber: json.problemNumber},
+    FilterExpression: "problemId = :problemId",
+    ExpressionAttributeValues: {
+      ":problemId": json.problemNumber
+    },
     TableName: config.dynamoTableName
   }, function(err, data) {
     if(err) {

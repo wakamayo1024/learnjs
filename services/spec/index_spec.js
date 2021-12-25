@@ -1,3 +1,4 @@
+// START: groupsAnswers
 describe('lambda function', function() {
   var index = require('index');
   var context;
@@ -6,7 +7,7 @@ describe('lambda function', function() {
     context = jasmine.createSpyObj('context', ['succeed', 'fail']);
     index.dynamodb = jasmine.createSpyObj('dynamo', ['scan']);
   });
-
+  // END: groupsAnswers
   describe('echo', function() {
     it('returns a result', function() {
       index.echo({}, context);
@@ -16,6 +17,7 @@ describe('lambda function', function() {
   });
 
   // 6100
+  // START: groupAnswers
   describe('popularAnswers', function() {
     it('requests problems with the given problem number', function() {
       index.popularAnswers({problemNumber: 42}, context);
@@ -35,6 +37,7 @@ describe('lambda function', function() {
       ]});
       expect(context.succeed).toHaveBeenCalledWith({"true": 3, "!false": 2});
     });
+    // END: groupsAnswers
 
     // 6300
     it('limits the results to the top five', function() {
@@ -67,5 +70,7 @@ describe('lambda function', function() {
       index.dynamodb.scan.calls.first().args[1]('error');
       expect(context.fail).toHaveBeenCalledWith('error');
     });
+    // START: groupsAnswers
   });
 });
+// END: groupsAnswers

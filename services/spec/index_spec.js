@@ -36,6 +36,32 @@ describe('lambda function', function() {
       expect(context.succeed).toHaveBeenCalledWith({"true": 3, "!false": 2});
     });
 
+    // 6300
+    it('limits the results to the top five', function() {
+      index.popularAnswers({problemNumber: 1}, context);
+      index.dynamodb.scan.calls.first().args[1](undefined, {Items: [
+        {answer: "1 === 1"},
+        {answer: "1 === 1"},
+        {answer: "2 === 2"},
+        {answer: "2 === 2"},
+        {answer: "2 === 2"},
+        {answer: "3 === 3"},
+        {answer: "3 === 3"},
+        {answer: "4 === 4"},
+        {answer: "4 === 4"},
+        {answer: "5 === 5"},
+        {answer: "5 === 5"},
+        {answer: "!false"},
+      ]});
+      expect(context.succeed).toHaveBeenCalledWith({
+        "1 === 1": 2,
+        "2 === 2": 3,
+        "3 === 3": 2,
+        "4 === 4": 2,
+        "5 === 5": 2}
+        );
+    });
+
     it('fails the request if dynamo return an error', function() {
       index.popularAnswers({problemNumber: 1}, context);
       index.dynamodb.scan.calls.first().args[1]('error');

@@ -16,6 +16,23 @@ function reduceItems(memo, items) {
   return memo;
 }
 
+// 6300
+function byCount(e1, e2) {
+  return e2[0] - e1[0];
+}
+
+function filterItems(items) {
+  var values = [];
+  for(i in items) {
+    values.push([items[i], i]);
+  }
+  var topFive = {};
+  values.sort(byCount).slice(0,5).forEach(function(e) {
+    topFive[e[1]] = e[0];
+  });
+  return topFive;
+}
+
 exports.popularAnswers = function(json, context) {
   exports.dynamodb.scan({
     Key: {problemNumber: json.problemNumber},
@@ -24,7 +41,7 @@ exports.popularAnswers = function(json, context) {
     if(err) {
       context.fail(err);
     } else {
-      context.succeed(reduceItems({}, data.Items));
+      context.succeed(filterItems(reduceItems({}, data.Items)));
     }
   });
 };

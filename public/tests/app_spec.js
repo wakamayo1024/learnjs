@@ -1,9 +1,18 @@
 describe('LearnJS', function() {
+    // 7100
+    var fakeWorker;
     // 4101
+    // START: beforeLlearnJs
     beforeEach(function() {
+        // 7100
+        fakeWorker = {
+            postMessage: function(msg) { fakeWorker.onmessage({data: eval(msg)}) }
+        };
+        spyOn(window, 'Worker').and.returnValue(fakeWorker);
         learnjs.identity = new $.Deferred();
     });
-    
+    // END: beforeLlearnJs
+
     // 5300
     describe('change views', function() {
         beforeEach(function() {
@@ -431,6 +440,10 @@ describe('LearnJS', function() {
                     spyOn(learnjs, 'saveAnswer');
                     view.find('.answer').val('true');
                     view.find('.check-btn').click();
+                });
+                // 7100
+                it('uses a worker to check the answer safely', function(){
+                    expect(window.Worker).toHaveBeenCalledWith('worker.js');
                 });
                 // 3100
                 it('saves the result', function(){

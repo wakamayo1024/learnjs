@@ -67,21 +67,35 @@ learnjs.problemView = function(data) {
     var resultFlash = view.find('.result');
     var answer = view.find('.answer');
     
+    // START:checkAnswer
     function checkAnswer() {
+        var def = $.Deferred();
         var test = problemData.code.replace('__', answer.val())  + '; problem();';
-        return eval(test);
+        var worker = new Worker('worker.js');
+        worker.onmessage = function(e) {
+            if(e.data) {
+                def.resolve(e.data);
+            } else {
+                def.reject();
+            }
+        }
+        worker.postMessage(test);
+        return def;
     }
+    // END: checkAnswer
 
+    // START:problemViewClickHandler
     function checkAnswerClick() {
-        if (checkAnswer()) {
+        checkAnswer().done(function(){
             var correctFlash = learnjs.buildCorrectFlash(problemNumber);
             learnjs.flashElement(resultFlash, correctFlash);
             learnjs.saveAnswer(problemNumber, answer.val());
-        } else {
+        }).fail(function(){
             learnjs.flashElement(resultFlash, 'Incorrect!');
-        }
+        });
         return false;       // サーバーにリクエストを投げない
     }
+    // END:problemViewClickHandler
     if (problemNumber < learnjs.problems.length) {
         var buttonItem = learnjs.template('skip-btn');
         buttonItem.find('a').attr('href', '#problem-' + (problemNumber + 1));

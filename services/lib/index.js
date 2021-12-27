@@ -34,12 +34,14 @@ function filterItems(items) {
 }
 
 exports.popularAnswers = function(json, context) {
+    // START: scanParams
   exports.dynamodb.scan({
     FilterExpression: "problemId = :problemId",
     ExpressionAttributeValues: {
       ":problemId": json.problemNumber
     },
     TableName: config.dynamoTableName
+    // END: scanParams
   }, function(err, data) {
     if(err) {
       context.fail(err);
